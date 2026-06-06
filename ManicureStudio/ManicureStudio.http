@@ -1,0 +1,6 @@
+@ManicureStudio_HostAddress = http://localhost:5231
+
+GET {{ManicureStudio_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
