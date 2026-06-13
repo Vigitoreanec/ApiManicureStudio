@@ -24,6 +24,16 @@ namespace ManicureStudio.Infrastructure.Repositories
                     .ThenInclude(ms => ms.Service)
                 .ToListAsync();
         }
+
+        public async Task<string?> GetServiceNameByIdAsync(int serviceId)
+        {
+            return await _context.Masters
+                .SelectMany(m => m.MasterServices)
+                .Where(s => s.ServiceId == serviceId)
+                .Select(s => s.Service.Name)
+                .FirstOrDefaultAsync();
+        }
+
         public async Task<bool> IsMasterAvailableAsync(
         int masterId,
         DateTime startTime,

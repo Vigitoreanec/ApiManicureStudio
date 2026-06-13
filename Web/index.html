@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#d4a0b0" />
+  <title>Маникюрная Студия</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <link rel="stylesheet" href="css/main.css" />
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════
+     ЭКРАН ВХОДА
+═══════════════════════════════════════════ -->
+<div id="screen-login" class="screen active">
+  <div class="login-wrap">
+    <div class="login-logo">
+      <div class="logo-circle">💅</div>
+      <h1 class="logo-title">Nail Studio</h1>
+      <p class="logo-sub">Система управления студией</p>
+    </div>
+    <div class="card login-card">
+      <div id="login-error" class="alert alert-error hidden"></div>
+      <div class="form-group">
+        <label class="form-label">Логин</label>
+        <input id="inp-username" class="form-input" type="text" placeholder="Введите логин" autocomplete="username" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Пароль</label>
+        <div class="input-password-wrap">
+          <input id="inp-password" class="form-input" type="password" placeholder="Введите пароль" autocomplete="current-password" />
+          <button class="btn-eye" onclick="togglePassword()" type="button">👁</button>
+        </div>
+      </div>
+      <button id="btn-login" class="btn btn-primary btn-full" onclick="doLogin()">Войти</button>
+    </div>
+    <p class="login-hint">admin / Admin123!</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     ГЛАВНОЕ ПРИЛОЖЕНИЕ (после входа)
+═══════════════════════════════════════════ -->
+<div id="app" class="hidden">
+
+  <!-- Верхняя шапка -->
+  <header class="topbar">
+    <button class="topbar-back hidden" id="btn-back" onclick="goBack()">‹</button>
+    <span class="topbar-title" id="topbar-title">Маникюрная Студия</span>
+    <button class="topbar-action" id="btn-topbar-action" onclick="topbarAction()">⋯</button>
+  </header>
+
+  <!-- ── ДАШБОРД ── -->
+  <div id="screen-dashboard" class="screen">
+    <div class="screen-scroll">
+      <div class="dashboard-greeting">
+        <p class="greeting-text">Добрый день, <strong id="dash-username">—</strong> 👋</p>
+        <p class="greeting-role" id="dash-role"></p>
+      </div>
+      <div class="stat-grid">
+        <div class="stat-card stat-pink" onclick="navTo('screen-appointments', document.getElementById('nav-appointments'))">
+          <div class="stat-icon">📅</div>
+          <div class="stat-num" id="stat-today">—</div>
+          <div class="stat-label">Записей сегодня</div>
+        </div>
+        <div class="stat-card stat-purple" onclick="navTo('screen-clients', document.getElementById('nav-clients'))">
+          <div class="stat-icon">👩</div>
+          <div class="stat-num" id="stat-clients">—</div>
+          <div class="stat-label">Клиентов</div>
+        </div>
+        <div class="stat-card stat-rose" onclick="navTo('screen-masters', document.getElementById('nav-masters'))">
+          <div class="stat-icon">💆</div>
+          <div class="stat-num" id="stat-masters">—</div>
+          <div class="stat-label">Мастеров</div>
+        </div>
+        <div class="stat-card stat-beige" onclick="navTo('screen-services', document.getElementById('nav-services'))">
+          <div class="stat-icon">✨</div>
+          <div class="stat-num" id="stat-services">—</div>
+          <div class="stat-label">Услуг</div>
+        </div>
+      </div>
+      <div class="section-header">
+        <span class="section-title">Записи на сегодня</span>
+        <button class="btn-link" onclick="navTo('screen-appointments', document.getElementById('nav-appointments'))">Все →</button>
+      </div>
+      <div id="dash-appointments" style="padding:0 12px"><div class="loader"></div></div>
+      <div class="section-header"><span class="section-title">Быстрые действия</span></div>
+      <div class="quick-actions">
+        <button class="quick-btn" onclick="showScreen('screen-client-add')"><span class="quick-icon">➕</span><span>Новый клиент</span></button>
+        <button class="quick-btn" onclick="showScreen('screen-appointment-add')"><span class="quick-icon">📝</span><span>Новая запись</span></button>
+        <button class="quick-btn" onclick="navTo('screen-clients', document.getElementById('nav-clients'))"><span class="quick-icon">🔍</span><span>Клиенты</span></button>
+        <button class="quick-btn" onclick="navTo('screen-masters', document.getElementById('nav-masters'))"><span class="quick-icon">💅</span><span>Мастера</span></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── КЛИЕНТЫ ── -->
+  <div id="screen-clients" class="screen">
+    <div class="search-bar">
+      <input id="clients-search" class="search-input" type="search"
+             placeholder="🔍  Поиск по имени или телефону..."
+             oninput="searchClients(this.value)" />
+    </div>
+    <div id="clients-list" class="list-container"><div class="loader"></div></div>
+    <button class="fab" onclick="showScreen('screen-client-add')">＋</button>
+  </div>
+
+  <!-- ── КАРТОЧКА КЛИЕНТА ── -->
+  <div id="screen-client-detail" class="screen">
+    <div class="screen-scroll" id="client-detail-content"></div>
+  </div>
+
+  <!-- ── ФОРМА ДОБАВЛЕНИЯ КЛИЕНТА ── -->
+  <div id="screen-client-add" class="screen">
+    <div class="screen-scroll">
+      <div class="card form-card">
+        <h2 class="form-title">Новый клиент</h2>
+        <div id="client-add-error" class="alert alert-error hidden"></div>
+        <div class="form-group"><label class="form-label">Имя *</label><input id="ca-firstname" class="form-input" type="text" placeholder="Анна" /></div>
+        <div class="form-group"><label class="form-label">Фамилия *</label><input id="ca-lastname" class="form-input" type="text" placeholder="Иванова" /></div>
+        <div class="form-group"><label class="form-label">Телефон</label><input id="ca-phone" class="form-input" type="tel" placeholder="+7-999-000-0000" /></div>
+        <div class="form-group"><label class="form-label">Email</label><input id="ca-email" class="form-input" type="email" placeholder="anna@mail.ru" /></div>
+        <div class="form-group"><label class="form-label">Дата рождения</label><input id="ca-birth" class="form-input" type="date" /></div>
+        <div class="form-group"><label class="form-label">Заметки</label><textarea id="ca-notes" class="form-input form-textarea" placeholder="Пожелания, особенности..."></textarea></div>
+        <button class="btn btn-primary btn-full" onclick="submitAddClient()">Добавить клиента</button>
+        <button class="btn btn-ghost btn-full" onclick="goBack()">Отмена</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── ФОРМА РЕДАКТИРОВАНИЯ КЛИЕНТА ── -->
+  <div id="screen-client-edit" class="screen">
+    <div class="screen-scroll">
+      <div class="card form-card">
+        <h2 class="form-title">Редактировать клиента</h2>
+        <div id="client-edit-error" class="alert alert-error hidden"></div>
+        <input type="hidden" id="ce-id" />
+        <div class="form-group"><label class="form-label">Имя *</label><input id="ce-firstname" class="form-input" type="text" /></div>
+        <div class="form-group"><label class="form-label">Фамилия *</label><input id="ce-lastname" class="form-input" type="text" /></div>
+        <div class="form-group"><label class="form-label">Телефон</label><input id="ce-phone" class="form-input" type="tel" /></div>
+        <div class="form-group"><label class="form-label">Email</label><input id="ce-email" class="form-input" type="email" /></div>
+        <div class="form-group"><label class="form-label">Заметки</label><textarea id="ce-notes" class="form-input form-textarea"></textarea></div>
+        <button class="btn btn-primary btn-full" onclick="submitEditClient()">Сохранить изменения</button>
+        <button class="btn btn-ghost btn-full" onclick="goBack()">Отмена</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── ЗАПИСИ ── -->
+  <div id="screen-appointments" class="screen">
+    <div class="date-nav">
+      <button class="date-nav-btn" onclick="changeDate(-1)">‹</button>
+      <input id="appt-date" class="date-nav-date" type="date" onchange="loadAppointments()" />
+      <button class="date-nav-btn" onclick="changeDate(1)">›</button>
+    </div>
+    <div id="appointments-list" class="list-container"><div class="loader"></div></div>
+    <button class="fab" onclick="showScreen('screen-appointment-add')">＋</button>
+  </div>
+
+  <!-- ── КАРТОЧКА ЗАПИСИ ── -->
+  <div id="screen-appointment-detail" class="screen">
+    <div class="screen-scroll" id="appointment-detail-content"></div>
+  </div>
+
+  <!-- ── ФОРМА НОВОЙ ЗАПИСИ (3 шага) ── -->
+  <div id="screen-appointment-add" class="screen">
+    <div class="screen-scroll">
+      <div class="card form-card">
+        <h2 class="form-title">Новая запись</h2>
+        <div id="appt-add-error" class="alert alert-error hidden"></div>
+
+        <!-- Шаг 1: Клиент -->
+        <div class="form-step" id="appt-step-1">
+          <div class="step-badge">Шаг 1 из 3 — Клиент</div>
+          <div class="form-group">
+            <label class="form-label">Клиент *</label>
+            <input id="appt-client-search" class="form-input" type="search"
+                   placeholder="Начните вводить имя или телефон..."
+                   oninput="searchClientForAppt(this.value)" />
+            <div id="appt-client-results" class="dropdown-list hidden"></div>
+            <div id="appt-client-selected" class="selected-badge hidden"></div>
+          </div>
+          <button class="btn btn-primary btn-full" onclick="apptStep(2)">Далее →</button>
+        </div>
+
+        <!-- Шаг 2: Мастер и услуги -->
+        <div class="form-step hidden" id="appt-step-2">
+          <div class="step-badge">Шаг 2 из 3 — Мастер и услуги</div>
+          <div class="form-group">
+            <label class="form-label">Мастер *</label>
+            <select id="appt-master" class="form-input form-select" onchange="loadSlotsForAppt()">
+              <option value="">— выберите мастера —</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Услуги *</label>
+            <div id="appt-services-list" class="services-check-list"></div>
+          </div>
+          <div class="appt-total-row">
+            Итого: <strong id="appt-total-price">0 руб.</strong>
+            / <span id="appt-total-duration">0 мин.</span>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-ghost" onclick="apptStep(1)">← Назад</button>
+            <button class="btn btn-primary" onclick="apptStep(3)">Далее →</button>
+          </div>
+        </div>
+
+        <!-- Шаг 3: Дата и время -->
+        <div class="form-step hidden" id="appt-step-3">
+          <div class="step-badge">Шаг 3 из 3 — Дата и время</div>
+          <div class="form-group">
+            <label class="form-label">Дата *</label>
+            <input id="appt-date-pick" class="form-input" type="date" onchange="loadSlotsForAppt()" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Свободное время *</label>
+            <div id="appt-slots-grid" class="slots-grid">
+              <p class="hint-text">Выберите мастера, услуги и дату</p>
+            </div>
+            <input type="hidden" id="appt-time-selected" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Заметки</label>
+            <textarea id="appt-notes" class="form-input form-textarea" placeholder="Пожелания клиента..."></textarea>
+          </div>
+          <div class="form-group">
+            <label class="form-check-label">
+              <input id="appt-calendar" type="checkbox" checked />
+              Добавить в календарь телефона
+            </label>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-ghost" onclick="apptStep(2)">← Назад</button>
+            <button class="btn btn-primary" onclick="submitAddAppointment()">Записать ✓</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── МАСТЕРА ── -->
+  <div id="screen-masters" class="screen">
+    <div id="masters-list" class="list-container"><div class="loader"></div></div>
+  </div>
+
+  <!-- ── УСЛУГИ ── -->
+  <div id="screen-services" class="screen">
+    <div id="services-list" class="list-container"><div class="loader"></div></div>
+  </div>
+
+  <!-- Нижняя навигация -->
+  <nav class="bottom-nav">
+    <button class="nav-btn active" id="nav-dashboard" onclick="navTo('screen-dashboard', this)">
+      <span class="nav-icon">🏠</span><span class="nav-label">Главная</span>
+    </button>
+    <button class="nav-btn" id="nav-clients" onclick="navTo('screen-clients', this)">
+      <span class="nav-icon">👩</span><span class="nav-label">Клиенты</span>
+    </button>
+    <button class="nav-btn nav-center-btn" id="nav-appointments" onclick="navTo('screen-appointments', this)">
+      <span class="nav-icon">📅</span><span class="nav-label">Записи</span>
+    </button>
+    <button class="nav-btn" id="nav-masters" onclick="navTo('screen-masters', this)">
+      <span class="nav-icon">💆</span><span class="nav-label">Мастера</span>
+    </button>
+    <button class="nav-btn" id="nav-services" onclick="navTo('screen-services', this)">
+      <span class="nav-icon">✨</span><span class="nav-label">Услуги</span>
+    </button>
+  </nav>
+</div>
+
+<!-- Toast уведомление -->
+<div id="toast" class="toast hidden"></div>
+
+<!-- Модальное окно подтверждения -->
+<div id="modal-overlay" class="modal-overlay hidden" onclick="closeModal()">
+  <div class="modal-card" onclick="event.stopPropagation()">
+    <p class="modal-text" id="modal-text"></p>
+    <div class="btn-row">
+      <button class="btn btn-ghost" onclick="closeModal()">Отмена</button>
+      <button class="btn btn-danger" id="modal-confirm-btn">Подтвердить</button>
+    </div>
+  </div>
+</div>
+
+<!-- URL вашего C# API — измените при развёртывании на сервере -->
+<script>window.API_BASE = 'http://localhost:5000';</script>
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/clients.js"></script>
+<script src="js/appointments.js"></script>
+<script src="js/masters.js"></script>
+<script src="js/dashboard.js"></script>
+<script src="js/app.js"></script>
+
+  <!-- Service Worker — регистрация для PWA офлайн-режима -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then(reg => console.log('[PWA] Service Worker зарегистрирован'))
+          .catch(err => console.log('[PWA] SW ошибка:', err));
+      });
+    }
+  </script>
+</body>
+</html>

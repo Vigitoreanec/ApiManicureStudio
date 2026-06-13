@@ -12,7 +12,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 //------ API
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = 
+    System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+});
 //------ EF Core
 builder.Services.AddInfrastructure(builder.Configuration);
 //------ Swagger
