@@ -36,12 +36,12 @@ namespace ManicureStudio.Infrastructure.Data
                 {
                     case EntityState.Added:
                         // При создании — фиксируем время создания
-                        entry.Entity.CreatedAt = DateTime.UtcNow;
+                        entry.Entity.CreatedAt = DateTime.Now;
                         break;
 
                     case EntityState.Modified:
                         // При обновлении — фиксируем время изменения
-                        entry.Entity.UpdatedAt = DateTime.UtcNow;
+                        entry.Entity.UpdatedAt = DateTime.Now;
                         break;
                 }
             }

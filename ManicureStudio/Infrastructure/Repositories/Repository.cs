@@ -67,7 +67,7 @@ namespace ManicureStudio.Infrastructure.Repositories
             if (entity != null)
             {
                 entity.IsDeleted = true;
-                entity.UpdatedAt = DateTime.UtcNow;
+                entity.UpdatedAt = DateTime.Now;
                 await UpdateAsync(entity);
             }
         }

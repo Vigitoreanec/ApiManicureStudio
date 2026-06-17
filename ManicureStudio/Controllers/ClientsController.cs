@@ -1,11 +1,14 @@
 ﻿using ManicureStudio.API.APIResult;
 using ManicureStudio.Core.Entities;
 using ManicureStudio.Core.Interfaces;
+using ManicureStudio.Infrastructure.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ManicureStudio.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("api/[controller]")]
     [Produces("application/json")]
     public class ClientsController : ControllerBase
@@ -134,7 +137,7 @@ namespace ManicureStudio.Controllers
             existing.Notes = client.Notes;
             existing.IsVip = client.IsVip;
 
-            existing.UpdatedAt = DateTime.UtcNow; // Фиксируем время изменения
+            existing.UpdatedAt = DateTime.Now; // Фиксируем время изменения
             existing.Appointments = client.Appointments;
             
 

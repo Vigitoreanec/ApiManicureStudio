@@ -1,5 +1,134 @@
 [
   {
+    "ContainingType": "ManicureStudio.Controllers.AppointmentController",
+    "Method": "GetWithDetails",
+    "RelativePath": "api/Appointment",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "ManicureStudio.API.APIResult.ApiResult\u00601[[System.Collections.Generic.IEnumerable\u00601[[ManicureStudio.Core.Entities.Appointment, ManicureStudio, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 200
+      },
+      {
+        "Type": "ManicureStudio.API.APIResult.ApiResult\u00601[[ManicureStudio.Core.Entities.Appointment, ManicureStudio, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 404
+      }
+    ]
+  },
+  {
+    "ContainingType": "ManicureStudio.Controllers.AppointmentController",
+    "Method": "GetClientAppointments",
+    "RelativePath": "api/Appointment/client/{clientId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "clientId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "ManicureStudio.API.APIResult.ApiResult\u00601[[System.Collections.Generic.IEnumerable\u00601[[ManicureStudio.Core.Entities.Appointment, ManicureStudio, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 200
+      },
+      {
+        "Type": "ManicureStudio.API.APIResult.ApiResult\u00601[[ManicureStudio.Core.Entities.Appointment, ManicureStudio, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 404
+      }
+    ]
+  },
+  {
+    "ContainingType": "ManicureStudio.Controllers.AppointmentController",
+    "Method": "GetMasterAppointments",
+    "RelativePath": "api/Appointment/master/{masterId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "masterId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "date",
+        "Type": "System.DateOnly",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "ManicureStudio.API.APIResult.ApiResult\u00601[[System.Collections.Generic.IEnumerable\u00601[[ManicureStudio.Core.Entities.Appointment, ManicureStudio, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 200
+      },
+      {
+        "Type": "ManicureStudio.API.APIResult.ApiResult\u00601[[ManicureStudio.Core.Entities.Appointment, ManicureStudio, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 404
+      }
+    ]
+  },
+  {
+    "ContainingType": "ManicureStudio.Controllers.AppointmentController",
+    "Method": "GetUpcomingAppointments",
+    "RelativePath": "api/Appointment/upcoming",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "hoursAhead",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "ManicureStudio.API.APIResult.ApiResult\u00601[[System.Collections.Generic.IEnumerable\u00601[[ManicureStudio.Core.Entities.Appointment, ManicureStudio, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 200
+      },
+      {
+        "Type": "ManicureStudio.API.APIResult.ApiResult\u00601[[ManicureStudio.Core.Entities.Appointment, ManicureStudio, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 404
+      }
+    ]
+  },
+  {
     "ContainingType": "ManicureStudio.Controllers.ClientsController",
     "Method": "GetAll",
     "RelativePath": "api/Clients",
@@ -355,7 +484,22 @@
         "IsRequired": false
       }
     ],
-    "ReturnTypes": []
+    "ReturnTypes": [
+      {
+        "Type": "ManicureStudio.API.APIResult.ApiResult\u00601[[ManicureStudio.Core.Entities.Master, ManicureStudio, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 200
+      },
+      {
+        "Type": "ManicureStudio.API.APIResult.ApiResult\u00601[[ManicureStudio.Core.Entities.Master, ManicureStudio, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 404
+      }
+    ]
   },
   {
     "ContainingType": "ManicureStudio.Controllers.MastersController",

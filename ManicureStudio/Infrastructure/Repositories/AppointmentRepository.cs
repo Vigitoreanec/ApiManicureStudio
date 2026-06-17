@@ -44,9 +44,9 @@ namespace ManicureStudio.Infrastructure.Repositories
         }
         public async Task<IEnumerable<Appointment>> GetUpcomingAppointmentsAsync(int hoursAhead = 24)
         {
-            var now = DateTime.UtcNow;
+            var now = DateTime.Now;
             var until = now.AddHours(hoursAhead);
-
+            
             return await _dbSet
                 .Where(a =>
                     a.StartTime >= now &&

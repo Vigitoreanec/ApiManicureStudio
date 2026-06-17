@@ -2,6 +2,7 @@
 using ManicureStudio.Core.Entities;
 using ManicureStudio.Core.Interfaces;
 using ManicureStudio.Infrastructure.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ManicureStudio.Controllers
@@ -9,7 +10,7 @@ namespace ManicureStudio.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [Produces("application/json")]
-
+    /*[Authorize]*/
     public class MastersController(IMasterRepository masterRepository, 
                                     ILogger<MastersController> logger) : ControllerBase
     {
@@ -58,6 +59,8 @@ namespace ManicureStudio.Controllers
         }
 
         [HttpGet("{id:int}/availability")]
+        [ProducesResponseType(typeof(ApiResult<Master>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResult<Master>), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> CheckAvailability(
         int id,
         [FromQuery] DateTime start,
@@ -69,6 +72,7 @@ namespace ManicureStudio.Controllers
         }
 
         [HttpPost]
+        /*[Authorize(Roles = "Admin")]*/
         [ProducesResponseType(typeof(ApiResult<Master>), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ApiResult<Master>), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Create([FromBody] Master master)
@@ -83,6 +87,7 @@ namespace ManicureStudio.Controllers
         }
 
         [HttpPut("{id:int}")]
+        [Authorize(Roles = "Admin,Master")]
         [ProducesResponseType(typeof(ApiResult<Master>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResult<Master>), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Update(int id, [FromBody] Master master)
@@ -100,7 +105,7 @@ namespace ManicureStudio.Controllers
             existing.PhotoUrl = master.PhotoUrl;
             existing.IsActive = master.IsActive;
 
-            existing.UpdatedAt = DateTime.UtcNow;
+            existing.UpdatedAt = DateTime.Now;
             existing.Appointments = master.Appointments;
 
             await _masterRepository.UpdateAsync(existing);
