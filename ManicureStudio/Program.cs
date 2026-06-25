@@ -1,8 +1,8 @@
 using ManicureStudio.API;
 using ManicureStudio.API.Middleware;
+using ManicureStudio.Bot.Exceptions;
 using ManicureStudio.Infrastructure;
 using ManicureStudio.Infrastructure.Data;
-using Microsoft.Extensions.Logging;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,6 +26,9 @@ builder.Services.AddCorsPolicy(builder.Configuration);
 //------ Health Checks — эндпоинт /health для мониторинга
 builder.Services.AddHealthChecks()
     .AddDbContextCheck<AppDbContext>("database"); // Проверяет подключение к БД
+
+builder.Services.AddBotServices(builder.Configuration);
+
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

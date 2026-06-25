@@ -176,3 +176,5 @@ B:\Проект\ManicureStudio\ManicureStudio\bin\Debug\net8.0\Microsoft.Extensi
 B:\Проект\ManicureStudio\ManicureStudio\bin\Debug\net8.0\Microsoft.Extensions.Hosting.Abstractions.dll
 B:\Проект\ManicureStudio\ManicureStudio\bin\Debug\net8.0\Serilog.dll
 B:\Проект\ManicureStudio\ManicureStudio\obj\Debug\net8.0\ManicureStudio.sourcelink.json
+B:\Проект\ManicureStudio\ManicureStudio\bin\Debug\net8.0\Newtonsoft.Json.dll
+B:\Проект\ManicureStudio\ManicureStudio\bin\Debug\net8.0\Telegram.Bot.dll

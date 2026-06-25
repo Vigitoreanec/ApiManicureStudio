@@ -312,6 +312,72 @@ namespace ManicureStudio.Migrations
                     b.ToTable("ServiceCategories", (string)null);
                 });
 
+            modelBuilder.Entity("ManicureStudio.Core.Entities.TelegramUser", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("ClientId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CurrentStep")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("FirstName")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("LastName")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int?>("MasterId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SessionData")
+                        .HasMaxLength(4000)
+                        .HasColumnType("nvarchar(4000)");
+
+                    b.Property<long>("TelegramId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Username")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClientId")
+                        .HasDatabaseName("IX_TelegramUsers_ClientId");
+
+                    b.HasIndex("MasterId")
+                        .HasDatabaseName("IX_TelegramUsers_MasterId");
+
+                    b.HasIndex("TelegramId")
+                        .IsUnique()
+                        .HasDatabaseName("IX_TelegramUsers_TelegramId");
+
+                    b.HasIndex("IsDeleted", "UpdatedAt")
+                        .HasDatabaseName("IX_TelegramUsers_IsDeleted_UpdatedAt");
+
+                    b.ToTable("TelegramUsers", (string)null);
+                });
+
             modelBuilder.Entity("ManicureStudio.Core.Entities.Appointment", b =>
                 {
                     b.HasOne("ManicureStudio.Core.Entities.Client", "Client")
@@ -378,6 +444,25 @@ namespace ManicureStudio.Migrations
                         .IsRequired();
 
                     b.Navigation("Category");
+                });
+
+            modelBuilder.Entity("ManicureStudio.Core.Entities.TelegramUser", b =>
+                {
+                    b.HasOne("ManicureStudio.Core.Entities.Client", "Client")
+                        .WithMany()
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .HasConstraintName("FK_TelegramUsers_ClientId");
+
+                    b.HasOne("ManicureStudio.Core.Entities.Master", "Master")
+                        .WithMany()
+                        .HasForeignKey("MasterId")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .HasConstraintName("FK_TelegramUsers_MasterId");
+
+                    b.Navigation("Client");
+
+                    b.Navigation("Master");
                 });
 
             modelBuilder.Entity("ManicureStudio.Core.Entities.Appointment", b =>

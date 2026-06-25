@@ -13,6 +13,7 @@ namespace ManicureStudio.Infrastructure.Data
         public DbSet<Appointment> Appointments { get; set; } = null!;
         public DbSet<MasterService> MasterServices { get; set; } = null!;
         public DbSet<AppointmentService> AppointmentServices { get; set; } = null!;
+        public DbSet<TelegramUser> TelegramUsers { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -26,6 +27,7 @@ namespace ManicureStudio.Infrastructure.Data
             modelBuilder.Entity<Service>().HasQueryFilter(e => !e.IsDeleted);
             modelBuilder.Entity<ServiceCategory>().HasQueryFilter(e => !e.IsDeleted);
             modelBuilder.Entity<Appointment>().HasQueryFilter(e => !e.IsDeleted);
+            modelBuilder.Entity<TelegramUser>().HasQueryFilter(e => !e.IsDeleted);
         }
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

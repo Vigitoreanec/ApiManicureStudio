@@ -11,10 +11,11 @@
 using System;
 using System.Reflection;
 
+[assembly: Microsoft.Extensions.Configuration.UserSecrets.UserSecretsIdAttribute("296f1e28-66b2-46e1-b824-0f0cc8b7a122")]
 [assembly: System.Reflection.AssemblyCompanyAttribute("ManicureStudio")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+85f32a7ad2449a891c3ae01763be8e0888846e88")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6352158bcaf2c3996d8668235c322fdec6ab7925")]
 [assembly: System.Reflection.AssemblyProductAttribute("ManicureStudio")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ManicureStudio")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
