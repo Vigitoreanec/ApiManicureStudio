@@ -1,6 +1,6 @@
 ﻿using Telegram.Bot.Types;
 
-namespace ManicureStudio.Bot.Repositories
+namespace ManicureStudio.Bot.Interfaces
 {
     public interface IBotService
     {

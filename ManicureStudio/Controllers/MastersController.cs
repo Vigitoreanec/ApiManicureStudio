@@ -71,6 +71,24 @@ namespace ManicureStudio.Controllers
                 isAvailable ? "Мастер свободен" : "Мастер занят в это время"));
         }
 
+        [HttpGet("{id:int}/clients")]
+        [ProducesResponseType(typeof(ApiResult<Master>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ApiResult<Master>), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetMasterWithClients(int id)
+        {
+            var master = await _masterRepository.GetMasterWithClientsAsync(id);
+            if (master == null)
+            {
+                return NotFound(ApiResult<Master>.Failure($"Мастер с ID={id} не найден"));
+            }
+
+            _logger.LogInformation("Запрошен мастер {MasterId} с клиентами. Найдено записей: {Count}",
+                                   id,
+                                   master.Appointments?.Count ?? 0);
+
+            return Ok(ApiResult<Master>.Success(master));
+        }
+
         [HttpPost]
         /*[Authorize(Roles = "Admin")]*/
         [ProducesResponseType(typeof(ApiResult<Master>), StatusCodes.Status201Created)]
@@ -87,7 +105,7 @@ namespace ManicureStudio.Controllers
         }
 
         [HttpPut("{id:int}")]
-        [Authorize(Roles = "Admin,Master")]
+        /*[Authorize(Roles = "Admin,Master")]*/
         [ProducesResponseType(typeof(ApiResult<Master>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResult<Master>), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Update(int id, [FromBody] Master master)

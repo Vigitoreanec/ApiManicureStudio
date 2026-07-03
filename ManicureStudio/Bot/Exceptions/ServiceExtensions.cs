@@ -1,4 +1,6 @@
-﻿using ManicureStudio.Bot.Interfaces;
+﻿using ManicureStudio.Bot.Handlers;
+using ManicureStudio.Bot.Infrastructure;
+using ManicureStudio.Bot.Interfaces;
 using ManicureStudio.Bot.Repositories;
 using Newtonsoft.Json.Linq;
 using System.Net;
@@ -31,15 +33,21 @@ namespace ManicureStudio.Bot.Exceptions
 
                 return new TelegramBotClient(token, httpClient);
             });
-            /*services.AddSingleton<ITelegramBotClient>(sp => new TelegramBotClient(token));*/
-
+            
             services.AddScoped<ITelegramUserRepository, TelegramUserRepository>();
 
             services.AddScoped<ISessionService, SessionService>();
+            services.AddScoped<IScheduleService, ScheduleService>();
             services.AddScoped<IBotService, BotService>();
 
+
             services.AddScoped<IUpdateHandler, UpdateHandler>();
+            services.AddScoped<ServiceHandler>();
+            services.AddScoped<AppointmentHandler>();
+            services.AddScoped<ProfileHandler>();
+            services.AddScoped<ClientHandler>();
             services.AddScoped<BotExceptionHandler>();
+
 
             services.AddHostedService<BotHostedService>();
 

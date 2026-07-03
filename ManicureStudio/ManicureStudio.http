@@ -1,6 +1,11 @@
 @ManicureStudio_HostAddress = http://localhost:5231
 
-GET {{ManicureStudio_HostAddress}}/weatherforecast/
+GET {{ManicureStudio_HostAddress}}/api/Admin/ping
 Accept: application/json
-
+###
+GET {{ManicureStudio_HostAddress}}/api/Admin/statistics
+Accept: application/json
+###
+GET {{ManicureStudio_HostAddress}}/api/Admin/status
+Accept: application/json
 ###

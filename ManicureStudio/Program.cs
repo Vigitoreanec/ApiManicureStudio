@@ -1,4 +1,4 @@
-using ManicureStudio.API;
+п»їusing ManicureStudio.API;
 using ManicureStudio.API.Middleware;
 using ManicureStudio.Bot.Exceptions;
 using ManicureStudio.Infrastructure;
@@ -7,34 +7,34 @@ using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//------ Заменяем встроенный логгер
-//builder.Host.UseSerilog(); CREATE
+builder.Configuration.AddUserSecrets<Program>();
+builder.Configuration.AddEnvironmentVariables();
 
-// Add services to the container.
 //------ API
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
-    options.JsonSerializerOptions.ReferenceHandler = 
-    System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+    options.JsonSerializerOptions.ReferenceHandler =
+                System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+    options.JsonSerializerOptions.PropertyNamingPolicy =
+        System.Text.Json.JsonNamingPolicy.CamelCase;
 });
 //------ EF Core
 builder.Services.AddInfrastructure(builder.Configuration);
 //------ Swagger
 builder.Services.AddSwaggerDocumentation(builder.Configuration);
-//------ CORS политика
+
+//------ CORS РїРѕР»РёС‚РёРєР°
 builder.Services.AddCorsPolicy(builder.Configuration);
-//------ Health Checks — эндпоинт /health для мониторинга
+//------ Health Checks вЂ” СЌРЅРґРїРѕРёРЅС‚ /health РґР»СЏ РјРѕРЅРёС‚РѕСЂРёРЅРіР°
 builder.Services.AddHealthChecks()
-    .AddDbContextCheck<AppDbContext>("database"); // Проверяет подключение к БД
+    .AddDbContextCheck<AppDbContext>("database"); // РџСЂРѕРІРµСЂСЏРµС‚ РїРѕРґРєР»СЋС‡РµРЅРёРµ Рє Р‘Р”
 
 builder.Services.AddBotServices(builder.Configuration);
 
-
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
-//------ Инициализация БД
+//------ РРЅРёС†РёР°Р»РёР·Р°С†РёСЏ Р‘Р”
 
 using (var scope = app.Services.CreateScope())
 {
@@ -43,48 +43,45 @@ using (var scope = app.Services.CreateScope())
 
     try
     {
-        // Применяем миграции и заполняем начальные данные
+        // РџСЂРёРјРµРЅСЏРµРј РјРёРіСЂР°С†РёРё Рё Р·Р°РїРѕР»РЅСЏРµРј РЅР°С‡Р°Р»СЊРЅС‹Рµ РґР°РЅРЅС‹Рµ
         await DatabaseSeeder.SeedAsync(context, logger);
     }
     catch (Exception ex)
     {
-        logger.LogCritical(ex, "? Критическая ошибка при инициализации БД. Приложение остановлено.");
+        logger.LogCritical(ex, "? РљСЂРёС‚РёС‡РµСЃРєР°СЏ РѕС€РёР±РєР° РїСЂРё РёРЅРёС†РёР°Р»РёР·Р°С†РёРё Р‘Р”. РџСЂРёР»РѕР¶РµРЅРёРµ РѕСЃС‚Р°РЅРѕРІР»РµРЅРѕ.");
         throw; 
     }
 }
 
 //------
 
-// Глобальный обработчик исключений (ПЕРВЫМ в конвейере!)
+// Р“Р»РѕР±Р°Р»СЊРЅС‹Р№ РѕР±СЂР°Р±РѕС‚С‡РёРє РёСЃРєР»СЋС‡РµРЅРёР№ (РџР•Р Р’Р«Рњ РІ РєРѕРЅРІРµР№РµСЂРµ!)
 app.UseMiddleware<ExceptionMiddleware>();
-// Swagger только в разработке
+// Swagger С‚РѕР»СЊРєРѕ РІ СЂР°Р·СЂР°Р±РѕС‚РєРµ
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "Manicure Studio API v1");
-        c.RoutePrefix = "swagger";  // Доступен по /swagger
-        c.DisplayRequestDuration(); // Показывает время ответа
+        c.RoutePrefix = "swagger";
     });
 }
 
-//------ HTTPS редирект
+//------ HTTPS СЂРµРґРёСЂРµРєС‚
 app.UseHttpsRedirection();
 
-//------ CORS (до авторизации!)
+//------ CORS (РґРѕ Р°РІС‚РѕСЂРёР·Р°С†РёРё!)
 app.UseCors("ManicureStudioCors");
 
-//------ Аутентификация и авторизация
+//------ РђСѓС‚РµРЅС‚РёС„РёРєР°С†РёСЏ Рё Р°РІС‚РѕСЂРёР·Р°С†РёСЏ
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Health check эндпоинт
-app.MapHealthChecks("/health");
-
-Log.Information("?? Manicure Studio API запускается...");
-Log.Information("?? Swagger UI: https://localhost:PORT/swagger");
-Log.Information("?? Health Check: https://localhost:PORT/health");
+// Health check СЌРЅРґРїРѕРёРЅС‚
+Log.Information("вњ… API СѓСЃРїРµС€РЅРѕ Р·Р°РїСѓС‰РµРЅ");
+Log.Information("рџ“љ Swagger UI: {Url}",
+    app.Urls.FirstOrDefault() ?? "https://localhost:7023/swagger");
 
 app.MapControllers();
 

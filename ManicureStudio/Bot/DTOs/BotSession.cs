@@ -6,6 +6,9 @@ namespace ManicureStudio.Bot.DTOs
     public class BotSession
     {
         public List<int> SelectedServiceIds { get; set; } = [];
+        public int? SelectedCategoryId { get; set; }
+        public int? SelectedServiceId { get; set; }
+
         public int? SelectedMasterId { get; set; }
         public DateTime? SelectedDateTime { get; set; }
         // TEMP
@@ -19,6 +22,7 @@ namespace ManicureStudio.Bot.DTOs
         public int? EditingAppointmentId { get; set; }
         public DateTime SessionStartTime { get; set; } = DateTime.Now;
         public int? LastMessageId { get; set; }
+        public int TimePage { get; set; } = 0;
         public string ToJson() => JsonConvert.SerializeObject(this);
         public static BotSession FromJson(string? json)
         {

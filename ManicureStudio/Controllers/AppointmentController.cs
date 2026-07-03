@@ -17,7 +17,7 @@ namespace ManicureStudio.Controllers
         private readonly IAppointmentRepository _appoinmentRepository = appoinmentRepository;
         private readonly ILogger<AppointmentController> _logger = logger;
 
-        [HttpGet]
+        [HttpGet("{id}")]
         [ProducesResponseType(typeof(ApiResult<IEnumerable<Appointment>>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ApiResult<Appointment>), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetWithDetails(int id)

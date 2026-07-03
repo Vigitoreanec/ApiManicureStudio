@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ManicureStudio")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6352158bcaf2c3996d8668235c322fdec6ab7925")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e41798866c3552888f0372839312e80351d8545a")]
 [assembly: System.Reflection.AssemblyProductAttribute("ManicureStudio")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ManicureStudio")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

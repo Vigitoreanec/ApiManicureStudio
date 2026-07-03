@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace ManicureStudio.Controllers
 {
     [ApiController]
-    [Authorize]
+    /*[Authorize]*/
     [Route("api/[controller]")]
     [Produces("application/json")]
     public class ClientsController : ControllerBase

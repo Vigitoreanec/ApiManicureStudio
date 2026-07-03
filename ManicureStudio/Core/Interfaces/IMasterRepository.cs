@@ -8,7 +8,7 @@ namespace ManicureStudio.Core.Interfaces
         Task<IEnumerable<Master>> GetActiveMastersWithServicesAsync();
         Task<IEnumerable<Master>> GetMastersByServiceAsync(int serviceId);
         Task<string?> GetServiceNameByIdAsync(int serviceId);
-        
+        Task<Master> GetMasterWithClientsAsync(int masterId);
         Task<bool> IsMasterAvailableAsync
             (int masterId, DateTime startTime, DateTime endTime, int? excludeAppointmentId = null);
     }

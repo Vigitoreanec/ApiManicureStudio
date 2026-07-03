@@ -1,8 +1,72 @@
 [
   {
+    "ContainingType": "ManicureStudio.Controllers.AdminController",
+    "Method": "Ping",
+    "RelativePath": "api/Admin/ping",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "ManicureStudio.API.APIResult.ApiResult\u00601[[System.Object, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "ManicureStudio.Controllers.AdminController",
+    "Method": "GetStatistics",
+    "RelativePath": "api/Admin/statistics",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "ManicureStudio.API.APIResult.ApiResult\u00601[[ManicureStudio.Bot.DTOs.BotStatusResponse, ManicureStudio, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 200
+      },
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 500
+      }
+    ]
+  },
+  {
+    "ContainingType": "ManicureStudio.Controllers.AdminController",
+    "Method": "GetStatus",
+    "RelativePath": "api/Admin/status",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "ManicureStudio.API.APIResult.ApiResult\u00601[[ManicureStudio.Bot.DTOs.BotStatusResponse, ManicureStudio, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 200
+      },
+      {
+        "Type": "System.Void",
+        "MediaTypes": [],
+        "StatusCode": 500
+      }
+    ]
+  },
+  {
     "ContainingType": "ManicureStudio.Controllers.AppointmentController",
     "Method": "GetWithDetails",
-    "RelativePath": "api/Appointment",
+    "RelativePath": "api/Appointment/{id}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -10,7 +74,7 @@
       {
         "Name": "id",
         "Type": "System.Int32",
-        "IsRequired": false
+        "IsRequired": true
       }
     ],
     "ReturnTypes": [
@@ -482,6 +546,37 @@
         "Name": "end",
         "Type": "System.DateTime",
         "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "ManicureStudio.API.APIResult.ApiResult\u00601[[ManicureStudio.Core.Entities.Master, ManicureStudio, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 200
+      },
+      {
+        "Type": "ManicureStudio.API.APIResult.ApiResult\u00601[[ManicureStudio.Core.Entities.Master, ManicureStudio, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "application/json"
+        ],
+        "StatusCode": 404
+      }
+    ]
+  },
+  {
+    "ContainingType": "ManicureStudio.Controllers.MastersController",
+    "Method": "GetMasterWithClients",
+    "RelativePath": "api/Masters/{id}/clients",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
       }
     ],
     "ReturnTypes": [

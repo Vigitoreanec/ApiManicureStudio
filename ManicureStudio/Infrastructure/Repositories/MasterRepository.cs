@@ -34,6 +34,15 @@ namespace ManicureStudio.Infrastructure.Repositories
                 .FirstOrDefaultAsync();
         }
 
+        public async Task<Master?> GetMasterWithClientsAsync(int masterId)
+        {
+            return await _dbSet
+                .Include(m => m.Appointments)
+                .ThenInclude(a => a.Client)
+                .FirstOrDefaultAsync(m => m.Id == masterId && !m.IsDeleted);
+        }
+
+
         public async Task<bool> IsMasterAvailableAsync(
         int masterId,
         DateTime startTime,
@@ -56,5 +65,7 @@ namespace ManicureStudio.Infrastructure.Repositories
 
             return !await query.AnyAsync(); // Свободен, если нет пересечений
         }
+
+        
     }
 }

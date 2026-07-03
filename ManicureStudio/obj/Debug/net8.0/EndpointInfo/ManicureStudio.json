@@ -1,16 +1,79 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "Manicure Studio",
-    "description": "REST API для управления студией",
+    "title": "Manicure Studio API",
+    "description": "API для управления приложением и Telegram ботом",
     "contact": {
-      "name": "Техподдержка",
-      "email": "Nail@manicure.studio"
+      "name": "ContactName",
+      "email": "ContactEmail"
     },
     "version": "v1"
   },
   "paths": {
-    "/api/Appointment": {
+    "/api/Admin/status": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BotStatusResponseApiResult"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/Admin/statistics": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BotStatusResponseApiResult"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/Admin/ping": {
+      "get": {
+        "tags": [
+          "Admin"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectApiResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Appointment/{id}": {
       "get": {
         "tags": [
           "Appointment"
@@ -18,7 +81,8 @@
         "parameters": [
           {
             "name": "id",
-            "in": "query",
+            "in": "path",
+            "required": true,
             "schema": {
               "type": "integer",
               "format": "int32"
@@ -722,6 +786,46 @@
         }
       }
     },
+    "/api/Masters/{id}/clients": {
+      "get": {
+        "tags": [
+          "Masters"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MasterApiResult"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MasterApiResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/Services": {
       "get": {
         "tags": [
@@ -1143,6 +1247,67 @@
         "type": "integer",
         "format": "int32"
       },
+      "BotStatusResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "nullable": true
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "botName": {
+            "type": "string",
+            "nullable": true
+          },
+          "botUsername": {
+            "type": "string",
+            "nullable": true
+          },
+          "botId": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "isWebhookSet": {
+            "type": "boolean"
+          },
+          "webhookUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "pendingUpdates": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "BotStatusResponseApiResult": {
+        "type": "object",
+        "properties": {
+          "isSuccess": {
+            "type": "boolean"
+          },
+          "data": {
+            "$ref": "#/components/schemas/BotStatusResponse"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "Client": {
         "type": "object",
         "properties": {
@@ -1392,6 +1557,29 @@
         },
         "additionalProperties": false
       },
+      "ObjectApiResult": {
+        "type": "object",
+        "properties": {
+          "isSuccess": {
+            "type": "boolean"
+          },
+          "data": {
+            "nullable": true
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "PaymentMethod": {
         "enum": [
           0,
@@ -1556,17 +1744,17 @@
       }
     },
     "securitySchemes": {
-      "Bearer": {
-        "type": "http",
-        "description": "Введите JWT токен в формате: Bearer {token}",
-        "scheme": "bearer",
-        "bearerFormat": "JWT"
+      "SecretToken": {
+        "type": "apiKey",
+        "description": "Secret Token для верификации запросов от Telegram",
+        "name": "X-Telegram-Bot-Api-Secret-Token",
+        "in": "header"
       }
     }
   },
   "security": [
     {
-      "Bearer": [ ]
+      "SecretToken": [ ]
     }
   ]
 }

@@ -1,55 +1,64 @@
 ﻿using Microsoft.OpenApi.Models;
+using System.Reflection;
+
 
 namespace ManicureStudio.API
 {
     public static class ApiServiceExtensions
     {
-        public static IServiceCollection AddSwaggerDocumentation(
-        this IServiceCollection services,
-        IConfiguration configuration)
+        public static IServiceCollection AddSwaggerDocumentation(this IServiceCollection services,
+                                                                 IConfiguration configuration)
         {
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen(options =>
             {
-                var swagger = configuration.GetSection("SwaggerSettings");
-
                 options.SwaggerDoc("v1", new OpenApiInfo
                 {
-                    Title = swagger["Title"] ?? "Manicure Studio API",
-                    Description = swagger["Description"] ?? string.Empty,
-                    Version = swagger["Version"] ?? "v1",
+                    Title = "Manicure Studio API",
+                    Description = "API для управления приложением и Telegram ботом",
+                    Version = "v1",
                     Contact = new OpenApiContact
                     {
-                        Name = swagger["ContactName"],
-                        Email = swagger["ContactEmail"]
+                        Name = "ContactName" ?? string.Empty,
+                        Email ="ContactEmail" ?? string.Empty,
                     }
                 });
 
-                // Поддержка JWT в Swagger UI — кнопка "Authorize"
-                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                // ===== XML комментарии =====
+                try
                 {
-                    Name = "Authorization",
-                    Type = SecuritySchemeType.Http,
-                    Scheme = "bearer",
-                    BearerFormat = "JWT",
+                    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                    if (File.Exists(xmlPath))
+                    {
+                        options.IncludeXmlComments(xmlPath);
+                    }
+                }
+                catch { }
+
+                // ===== Secret Token для Telegram =====
+                options.AddSecurityDefinition("SecretToken", new OpenApiSecurityScheme
+                {
+                    Name = "X-Telegram-Bot-Api-Secret-Token",
+                    Type = SecuritySchemeType.ApiKey,
                     In = ParameterLocation.Header,
-                    Description = "Введите JWT токен в формате: Bearer {token}"
+                    Description = "Secret Token для верификации запросов от Telegram"
                 });
 
                 options.AddSecurityRequirement(new OpenApiSecurityRequirement
-            {
                 {
-                    new OpenApiSecurityScheme
                     {
-                        Reference = new OpenApiReference
+                        new OpenApiSecurityScheme
                         {
-                            Type = ReferenceType.SecurityScheme,
-                            Id   = "Bearer"
-                        }
-                    },
-                    Array.Empty<string>()
-                }
-            });
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "SecretToken"
+                            }
+                        },
+                        Array.Empty<string>()
+                    }
+                });
             });
 
             return services;
@@ -61,21 +70,21 @@ namespace ManicureStudio.API
         /// В продакшн замените на конкретные домены из конфигурации.
         /// </summary>
         public static IServiceCollection AddCorsPolicy(
-            this IServiceCollection services,
-            IConfiguration configuration)
-        {
+        this IServiceCollection services,
+        IConfiguration configuration)
+    {
             var allowedOrigins = configuration.GetSection("AllowedOrigins").Get<string[]>()
-                                 ?? Array.Empty<string>();
+                                 ?? new[] { "http://localhost:3000", "http://localhost:5173" };
+
 
             services.AddCors(options =>
             {
                 options.AddPolicy("ManicureStudioCors", policy =>
                 {
-                    policy
-                        .WithOrigins(allowedOrigins)    // Только разрешённые источники
-                        .AllowAnyHeader()                // Любые заголовки
-                        .AllowAnyMethod()                // GET, POST, PUT, DELETE и т.д.
-                        .AllowCredentials();             // Cookies / Authorization header
+                    policy.WithOrigins(allowedOrigins)
+                          .AllowAnyHeader()
+                          .AllowAnyMethod()
+                          .AllowCredentials();
                 });
             });
 
